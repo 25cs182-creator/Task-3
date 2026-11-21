@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pricing Plans | Nova</title>
+<style>
+  * { box-sizing: border-box; }
+  :root { --ink:#152238; --muted:#68778d; --blue:#2563eb; --pale:#edf4ff; --line:#e5eaf2; }
+  body { margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink); background:linear-gradient(145deg,#f7faff,#eef3fb); min-height:100vh; }
+  .page { max-width:1120px; margin:auto; padding:64px 24px 72px; }
+  .header { text-align:center; margin-bottom:42px; }
+  .eyebrow { display:inline-block; color:#2563eb; background:#e7efff; padding:8px 13px; border-radius:999px; font-size:.82rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  h1 { font-size:clamp(2rem,5vw,3.25rem); letter-spacing:-.045em; line-height:1.1; margin:18px 0 14px; }
+  .subtitle { color:var(--muted); max-width:650px; margin:0 auto; font-size:1.08rem; line-height:1.7; }
+  .billing { margin-top:28px; display:inline-flex; align-items:center; gap:13px; padding:8px 12px; background:#fff; border:1px solid var(--line); border-radius:999px; box-shadow:0 5px 18px #203c6710; }
+  .billing-label { font-size:.93rem; font-weight:600; color:#65748a; }
+  .billing-label.active { color:var(--ink); }
+  .switch { width:48px; height:27px; border:0; border-radius:20px; background:#cbd5e5; padding:3px; cursor:pointer; transition:background .2s; }
+  .switch[aria-checked="true"] { background:var(--blue); }
+  .switch span { display:block; width:21px; height:21px; background:#fff; border-radius:50%; box-shadow:0 1px 4px #0002; transition:transform .2s; }
+  .switch[aria-checked="true"] span { transform:translateX(21px); }
+  .save { color:#16834b; background:#e9f9ef; padding:4px 8px; border-radius:999px; font-size:.75rem; font-weight:700; }
+  .cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:22px; align-items:stretch; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:22px; padding:30px 27px; box-shadow:0 12px 30px #18345a0a; display:flex; flex-direction:column; position:relative; transition:transform .22s, box-shadow .22s, border-color .22s; }
+  .card:hover { transform:translateY(-8px); box-shadow:0 22px 42px #18345a18; border-color:#c7d7f6; }
+  .card.featured { border:2px solid var(--blue); box-shadow:0 14px 36px #2563eb18; }
+  .popular { position:absolute; top:-13px; left:50%; transform:translateX(-50%); white-space:nowrap; background:var(--blue); color:#fff; padding:6px 13px; border-radius:999px; font-size:.78rem; font-weight:700; }
+  .plan { font-size:1.08rem; font-weight:750; margin-bottom:8px; }
+  .description { color:var(--muted); line-height:1.55; font-size:.93rem; min-height:46px; }
+  .price-row { display:flex; align-items:baseline; gap:4px; margin:23px 0 5px; }
+  .price { font-size:2.65rem; font-weight:800; letter-spacing:-.05em; }
+  .period { color:var(--muted); font-size:.95rem; }
+  .billing-note { color:#8190a5; font-size:.8rem; min-height:20px; }
+  .cta { display:block; text-align:center; text-decoration:none; color:var(--ink); background:#f3f6fb; border:1px solid #e4eaf3; border-radius:12px; padding:13px 16px; margin:22px 0 25px; font-weight:700; transition:all .2s; }
+  .cta:hover { background:#e8effa; }
+  .featured .cta { background:linear-gradient(110deg,#0e3761,#2563eb); color:white; border-color:transparent; }
+  .featured .cta:hover { filter:brightness(1.08); }
+  .features-title { font-size:.82rem; font-weight:750; margin-bottom:13px; }
+  ul { list-style:none; margin:0; padding:0; display:grid; gap:12px; }
+  li { display:flex; gap:10px; align-items:flex-start; color:#53647b; font-size:.9rem; line-height:1.45; }
+  li::before { content:'✓'; color:#16a36a; font-weight:800; flex:0 0 auto; }
+  .footnote { text-align:center; margin-top:32px; color:#7a889b; font-size:.88rem; }
+  @media (max-width:850px) { .cards { grid-template-columns:1fr; max-width:510px; margin:0 auto; gap:20px; } .card { padding:28px; } .description { min-height:0; } .page { padding-top:46px; } }
+  @media (max-width:460px) { .page { padding:38px 15px 52px; } .billing { gap:8px; } .billing-label { font-size:.82rem; } .save { font-size:.68rem; } .card { padding:24px 20px; } }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="header">
+    <span class="eyebrow">Simple, transparent pricing</span>
+    <h1>Plans that grow with you</h1>
+    <p class="subtitle">Choose the tools you need today, and upgrade whenever your team is ready. No hidden fees, just straightforward plans.</p>
+    <div class="billing" aria-label="Billing period selector">
+      <span class="billing-label active" id="monthlyLabel">Monthly</span>
+      <button class="switch" id="billingSwitch" type="button" role="switch" aria-checked="false" aria-label="Toggle yearly billing"><span></span></button>
+      <span class="billing-label" id="yearlyLabel">Yearly</span>
+      <span class="save">Save 20%</span>
+    </div>
+  </header>
+
+  <section class="cards" aria-label="Pricing plans">
+    <article class="card">
+      <div class="plan">Starter</div>
+      <p class="description">Everything you need to get organized and get started.</p>
+      <div class="price-row"><span class="price" data-month="0" data-year="0">$0</span><span class="period">/ month</span></div>
+      <div class="billing-note">Free forever</div>
+      <a class="cta" href="mailto:hello@example.com?subject=Starter%20Plan">Get started free</a>
+      <div class="features-title">What's included</div>
+      <ul><li>Up to 3 projects</li><li>Basic analytics</li><li>Community support</li><li>1 GB cloud storage</li></ul>
+    </article>
+    <article class="card featured">
+      <span class="popular">Most popular</span>
+      <div class="plan">Pro</div>
+      <p class="description">Powerful features for individuals and small teams doing more.</p>
+      <div class="price-row"><span class="price" data-month="19" data-year="15">$19</span><span class="period">/ month</span></div>
+      <div class="billing-note" data-note="pro">Billed monthly</div>
+      <a class="cta" href="mailto:hello@example.com?subject=Pro%20Plan">Start 14-day trial</a>
+      <div class="features-title">Everything in Starter, plus</div>
+      <ul><li>Unlimited projects</li><li>Advanced analytics</li><li>Priority email support</li><li>50 GB cloud storage</li><li>Team collaboration tools</li></ul>
+    </article>
+    <article class="card">
+      <div class="plan">Business</div>
+      <p class="description">Advanced controls and support for growing organizations.</p>
+      <div class="price-row"><span class="price" data-month="49" data-year="39">$49</span><span class="period">/ month</span></div>
+      <div class="billing-note" data-note="business">Billed monthly</div>
+      <a class="cta" href="mailto:hello@example.com?subject=Business%20Plan">Contact sales</a>
+      <div class="features-title">Everything in Pro, plus</div>
+      <ul><li>Unlimited team members</li><li>Custom reports</li><li>Dedicated support</li><li>Unlimited cloud storage</li><li>Advanced security controls</li></ul>
+    </article>
+  </section>
+  <p class="footnote">All plans include secure cloud access and can be changed at any time.</p>
+</main>
+<script>
+  const billingSwitch = document.getElementById('billingSwitch');
+  const monthlyLabel = document.getElementById('monthlyLabel');
+  const yearlyLabel = document.getElementById('yearlyLabel');
+  let yearly = false;
+
+  function updateBilling() {
+    billingSwitch.setAttribute('aria-checked', String(yearly));
+    monthlyLabel.classList.toggle('active', !yearly);
+    yearlyLabel.classList.toggle('active', yearly);
+    document.querySelectorAll('.price[data-month]').forEach(price => {
+      const amount = yearly ? price.dataset.year : price.dataset.month;
+      price.textContent = '$' + amount;
+    });
+    document.querySelectorAll('.price-row .period').forEach(period => {
+      period.textContent = yearly ? '/ month' : '/ month';
+    });
+    document.querySelector('[data-note="pro"]').textContent = yearly ? 'Billed yearly · $180 per year' : 'Billed monthly';
+    document.querySelector('[data-note="business"]').textContent = yearly ? 'Billed yearly · $468 per year' : 'Billed monthly';
+  }
+
+  billingSwitch.addEventListener('click', () => {
+    yearly = !yearly;
+    updateBilling();
+  });
+  updateBilling();
+</script>
+</body>
+</html>
